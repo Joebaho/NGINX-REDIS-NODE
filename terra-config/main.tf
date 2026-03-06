@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "us-west-2"
 }
 
 resource "aws_security_group" "web_sg" {
@@ -50,7 +50,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = "t3.medium"
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   user_data = <<-EOF
@@ -59,7 +59,7 @@ resource "aws_instance" "web" {
               apt-get install -y docker.io docker-compose git
               systemctl start docker
               systemctl enable docker
-              git clone https://github.com/Pravesh-Sudha/nginx-node-redis.git 
+              git clone https://github.com/Joebaho/NGINX-REDIS-NODE.git
               cd nginx-node-redis/
               docker-compose up -d --build
               EOF

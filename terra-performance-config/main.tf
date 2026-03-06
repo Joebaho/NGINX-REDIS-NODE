@@ -9,13 +9,13 @@ data "aws_subnets" "default" {
   }
   filter {
     name = "availability-zone"
-    values = ["us-east-1a", "us-east-1b"]
+    values = ["us-west-2a", "us-west-2b"]
   }
 }
 
 resource "aws_s3_object" "dockerrun" {
-  bucket       = "pravesh-ebs-terra-performance-bucket"
-  key          = "eb-demo/Dockerrun.aws.json"
+  bucket       = "baho-backup-bucket"
+  key          = "docker-compose-run/Dockerrun.aws.json"
   source       = "Dockerrun.aws.json"
   content_type = "application/json"
 }
