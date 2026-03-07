@@ -5,18 +5,18 @@ data "aws_vpc" "default" {
 }
 
 data "aws_ami" "ubuntu" {
-    most_recent = true
-    owners = ["amazon"]
-  
-      filter {
-        name   = "name"
-        values = ["ubuntu/images/hvm-ssd/ubuntu-*-amd64-server-*"]
-      }
+  most_recent = true
+  owners      = ["amazon"]
 
-      filter {
-        name   = "virtualization-type"
-        values = ["hvm"]
-      }
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-*-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 }
 # web Security group
 resource "aws_security_group" "web_sg" {
@@ -47,19 +47,20 @@ resource "aws_security_group" "web_sg" {
 }
 #web instance
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = var.instance_type
-  key_name = var.key_name
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   user_data = <<-EOF
               #!/bin/bash
+              set -euxo pipefail
               apt-get update -y
               apt-get install -y docker.io docker-compose git
               systemctl start docker
               systemctl enable docker
               git clone https://github.com/Joebaho/NGINX-REDIS-NODE.git
-              cd nginx-node-redis/
+              cd NGINX-REDIS-NODE/
               docker-compose up -d --build
               EOF
 
